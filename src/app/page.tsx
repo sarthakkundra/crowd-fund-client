@@ -2,10 +2,16 @@
 "use client";
 import { gql } from '@apollo/client';
 import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import * as React from 'react';
+import { WagmiProvider } from 'wagmi';
 import '@/lib/env';
 
-import CampaignCard from '@/components/campaignCard';
+import Campaigns from '@/components/campaigns';
+
+import  config  from '../wagmi/client';
+
+
 
 
 
@@ -23,7 +29,7 @@ import CampaignCard from '@/components/campaignCard';
 
 const query = gql`
 query GetCampaigns {
-  launches(first:5) {
+  launches(first:10) {
    CrowdFund_id
     targetAmount,
     startTime,
@@ -33,14 +39,24 @@ query GetCampaigns {
 `
 
 export default function HomePage() {
+  const [campaigns, setCampaigns] = React.useState<any>(null);
+  const queryClient = new QueryClient() 
   // const client = getClient();
   // const { data } = await client.query({ query });
     const { data } = useSuspenseQuery(query);
-  console.log("data ",data)
+
+  React.useEffect(() => {
+    setCampaigns(data?.launches);
+  }, [data])
 
   return (
+     <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
     <main>
- <CampaignCard id="1" startTime={123} endTime={123} targetAmount={4456} />
+ {/* <CampaignCard id="1" startTime={123} endTime={123} targetAmount={4456} /> */}
+ <Campaigns campaigns={campaigns as any} />
     </main>
+              </QueryClientProvider>
+      </WagmiProvider>
   );
 }

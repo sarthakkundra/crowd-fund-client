@@ -1,3 +1,4 @@
+
 import { Metadata } from 'next';
 import * as React from 'react';
 
@@ -7,6 +8,8 @@ import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
 import { ApolloWrapper } from '@/graphql/client';
+
+
 
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
@@ -57,7 +60,11 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <ApolloWrapper>{children}</ApolloWrapper>
+      <body>
+       
+            <ApolloWrapper>{children}</ApolloWrapper>
+
+      </body>
     </html>
   );
 }
